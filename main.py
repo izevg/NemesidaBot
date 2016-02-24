@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from telegram import Updater
-import Commands
+import Modules
 import logging
+import cast
 
 # Enable logging
 logging.basicConfig(
@@ -10,10 +11,10 @@ logging.basicConfig(
         level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-c_handler = Commands.commands_dispatcher(logger=logger)
+c_handler = Modules.commands_dispatcher(logger=logger)
 
 # def command_handler(bot, update, args):
-#     Commands.execute_command(command_name=)
+#     Modules.execute_command(command_name=)
 
 def start(bot, update):
     bot.sendMessage(update.message.chat_id, text='Hi!')
@@ -29,10 +30,8 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    for command in Commands.__all__:
-        from Commands import *
-        command_object = getattr(Commands, command)
-        func = getattr(command_object, command)
+    for command in Modules.__all__:
+        func = cast.cast_func(command)
         dp.addTelegramCommandHandler(command, func)
         logger.info(func)
 

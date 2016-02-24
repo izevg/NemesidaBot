@@ -18,7 +18,7 @@ class commands_dispatcher(object):
 
     def get_commands_list(self):
         global __all__
-        for file in os.listdir("./Commands"):
+        for file in os.listdir("./Modules"):
             if file.endswith(".py") and file != "__init__.py":
                 file = file[:-3]
                 __all__.append(file)
