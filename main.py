@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from telegram import Updater
+from telegram.ext import Updater, CommandHandler
 import Modules
 import logging
 import cast
@@ -20,27 +20,31 @@ def start(bot, update):
     bot.sendMessage(update.message.chat_id, text='Hi!')
 
 def error(bot, update, error):
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
+    logger.info('Update "%s" caused error "%s"' % (update, error))
 
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater("197147060:AAGnUFbiFuW77NnXjFUEAHp95OMNmq2xJgI")
+    updater = Updater(token="197147060:AAGnUFbiFuW77NnXjFUEAHp95OMNmq2xJgI")
+    logger.info("Updater created")
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
+    logger.info("Dispatcher created")
 
     # on different commands - answer in Telegram
     for command in Modules.__all__:
         func = cast.cast_func(command)
-        dp.addTelegramCommandHandler(command, func)
-        logger.info(func)
+        dp.add_handler(CommandHandler(command, func, pass_args=True))
+        logger.info("Handler added")
 
 
     # main starting function
-    dp.addTelegramCommandHandler("start", start)
+    dp.add_handler(CommandHandler("start", start))
+    logger.info("Start Handler added")
 
     # log all errors
-    dp.addErrorHandler(error)
+    dp.add_error_handler(error)
+    logger.info("Error Handler added")
 
     # Start the Bot
     updater.start_polling()

@@ -12,7 +12,7 @@ def c_ping(source, destination, requests_amount=1):
     return result
 
 
-def ping(bot, update, args):
+def ping(bot, update, args=""):
     reply = ""
     length = len(args)
     if length > 2:
